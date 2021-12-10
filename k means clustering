@@ -1,0 +1,17 @@
+library(plyr)
+library(ggplot2)
+library(cluster)
+library(lattice)
+library(graphics)
+library(grid)
+library(gridExtra)
+grade_input =  as.data.frame(read.csv("C:/Users/Hi/Documents/R/p.csv")) 
+grade_input
+kmdata_orig = as.matrix(grade_input[,c("Latitude","Longitude","Magnitude")]) 
+kmdata <- kmdata_orig[,1:3] 
+kmdata
+kmdata <- kmdata_orig[,2:4]
+km <- kmeans(kmdata, 3, 5) 
+print(km)
+plot(kmdata, col = km$cluster) 
+points(km$centers, col = 1:2, pch =10)
