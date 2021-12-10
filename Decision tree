@@ -1,0 +1,11 @@
+library("rpart")
+library("rpart.plot")
+play_decision <- read.table ("C:/Users/Hi/Documents/R/pre6.csv", header=TRUE, sep=",")
+play_decision
+summary(play_decision)
+fit<-rpart (Occur ~ Latitude + Longitude + Magnitude + MMI, method="class", data=play_decision, control=rpart.control(minsplit=1), parms=list(split='information'))
+summary(fit)
+rpart.plot(fit,type=4,extra=2,clip.right.labs=FALSE,varlen=0,faclen=0)
+newdata<-data.frame(Latitude="36.123",Longitude="21.897")
+newdata
+predict(model,newdata,type="class")
