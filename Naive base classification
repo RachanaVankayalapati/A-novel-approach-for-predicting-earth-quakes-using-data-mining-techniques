@@ -1,0 +1,19 @@
+library(e1071)
+traindata <- read.table("C:/Users/Hi/Documents/R/pre33.csv",header=TRUE,sep=",") 
+traindata
+testdata <-  read.table("C:/Users/Hi/Documents/R/Naive_Mini.csv",header=TRUE,sep=",") 
+testdata
+data(traindata)
+str(traindata)
+countsToCases<-function(x,countcol="Freq"){ idx<-rep.int(seq_len(nrow(x)),x[[countcol]]) x[[countcol]]<-NULL x[idx,]}
+a<-countsToCases(as.data.frame(play_decision))
+head(a)
+nrow(a)
+model<-naiveBayes(Occur~.,data=a)
+predict(model,a[sample(1:596,10,replace=FALSE),])
+predict(model,a[sample(1:596,10,replace=FALSE),],type="raw")
+m<-naiveBayes(Occur~.,data=traindata)
+m
+newdata<-data.frame(Year="2009",Mo="2",Dy="25",Hr="9",Mm="45",Sec="43",Latitude="36.123",Longitude="21.897",Magnitude="2.9",MMI="5")
+newdata
+predict(model,newdata,type="class")
