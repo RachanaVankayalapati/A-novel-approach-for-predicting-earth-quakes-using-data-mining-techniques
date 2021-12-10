@@ -1,0 +1,37 @@
+library(randomForest)
+a<-read.table ("C:/Users/Hi/Documents/R/ppd.csv", header=TRUE, sep=",")
+names(a)
+set.seed(1234)
+dec<-sample(2,nrow(a),replace=TRUE,prob=c(0.7,0.3))
+train<-a[dec==1,]
+validate<-a[dec==2,]
+fit.forest<-randomForest(Occur~Latitude+Longitude, data=train, na.action=na.roughfix, importance=TRUE)
+fit.forest
+importance(fit.forest,type=2)
+forest.pred<-predict(fit.forest,validate)
+forest.perf<-table(validate$Occur,forest.pred,dnn=c("Actual","Predicted"))
+forest.perf
+performance<-function(table,n=2){
+if(!all(dim(table)==c(2,2)))
+stop("Must be a 2*2 matrix")
+tn=table[1,1]
+fp=table[1,2]
+fn=table[2,1]
+tp=table[2,2]
+sensitivity=tp/(tp+fn)
+specificity=tn/(tn+fp)
+ppp=tp/(tp+fp)
+npp=tn/(tn+fn)
+hitrate=(tp+tn)/(tp+tn+fp+fn)
+result<- paste("sensitivity=",round(sensitivity,n), "\nspecificity=",round(specificity,n), "\nPositive Predictive Value=",round(ppp,n), "\nNegative Predictive Value=",round(npp,n), "\nAccuracy=",round(hitrate,n),"\n",sep="") 
+cat(result)
+performance(forest.perf)
+plot(fit.forest, ylim=c(0.0,0.1))
+importance(fit.forest)
+plot(importance(fit.forest),lty=2,pch=16)
+newdata<-data.frame(Latitude="36.123",Longitude="21.897")
+newdata
+m<-randomForest(Occur~.,data=train)
+m
+predict(m,newdata,type="class")
+hist(a$Latitude)
